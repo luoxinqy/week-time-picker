@@ -1,0 +1,157 @@
+/* 星期 × 24 小时点选时间选择器（配套 week-time-picker.js） */
+.week-time-picker-panel {
+    position: absolute;
+    z-index: 1080;
+    display: none;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #dce3ea;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(31, 45, 61, .18);
+    font-size: 12px;
+}
+
+.wtp-title {
+    margin-bottom: 10px;
+    padding: 6px 0;
+    background: linear-gradient(90deg, #4a89dc 0%, #5d9cec 100%);
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.wtp-table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.wtp-table th,
+.wtp-table td {
+    padding: 0;
+    border: 1px solid #e3e9ef;
+    text-align: center;
+}
+
+.wtp-group-row th {
+    height: 22px;
+    background: #f0f4f8;
+    color: #5d6d7e;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.wtp-hour-row th {
+    width: 20px;
+    height: 20px;
+    background: #f7f9fb;
+    color: #4a89dc;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.wtp-corner {
+    width: 64px !important;
+}
+
+.wtp-day-cell {
+    padding: 0 10px;
+    background: #f7f9fb;
+    color: #3b4a5a;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.wtp-slot {
+    width: 20px;
+    height: 24px;
+    background: #fff;
+    cursor: pointer;
+    transition: background-color .12s ease;
+}
+
+.wtp-slot:hover {
+    background: #cfe3ff;
+}
+
+.wtp-slot.selected {
+    background: linear-gradient(180deg, #5d9cec 0%, #4a89dc 100%);
+}
+
+.wtp-slot.selected:hover {
+    background: linear-gradient(180deg, #4a89dc 0%, #3b7dd8 100%);
+}
+
+.wtp-footer {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #eef2f6;
+    text-align: center;
+}
+
+.wtp-tip {
+    margin-right: 10px;
+    color: #95a5a6;
+}
+
+.wtp-clear {
+    margin-right: 12px;
+    color: #4a89dc;
+}
+
+.wtp-clear:hover {
+    color: #3b7dd8;
+}
+
+.wtp-btn {
+    margin-left: 6px;
+    padding: 3px 12px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.wtp-btn-primary {
+    background: linear-gradient(180deg, #5d9cec 0%, #4a89dc 100%);
+    color: #fff;
+}
+
+.wtp-btn-primary:hover {
+    background: linear-gradient(180deg, #4a89dc 0%, #3b7dd8 100%);
+}
+
+.wtp-btn-default {
+    background: #fff;
+    border-color: #ccd5dd;
+    color: #5d6d7e;
+}
+
+.wtp-btn-default:hover {
+    border-color: #4a89dc;
+    color: #4a89dc;
+}
+
+/* input 悬浮换行提示层（一天一行） */
+.wtp-hover-tip {
+    position: absolute;
+    z-index: 1080;
+    display: none;
+    margin: 0;
+    padding: 8px 12px;
+    max-width: 360px;
+    background: rgba(31, 45, 61, .92);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.8;
+    font-family: inherit;
+    white-space: pre;
+}
+

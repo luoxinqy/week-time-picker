@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week-time-picker 在线演示</title>
+    <link rel="stylesheet" href="week-time-picker.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 60px;
+            background: #f5f7fa;
+            color: #3b4a5a;
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .sub {
+            margin-bottom: 32px;
+            color: #8a99a8;
+            font-size: 13px;
+        }
+
+        .card {
+            margin-bottom: 28px;
+            padding: 24px;
+            max-width: 720px;
+            background: #fff;
+            border: 1px solid #e3e9ef;
+            border-radius: 6px;
+        }
+
+        .card h2 {
+            margin: 0 0 16px;
+            font-size: 16px;
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-item label {
+            display: inline-block;
+            width: 120px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .week-time-input {
+            box-sizing: border-box;
+            width: 320px;
+            max-width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #ccd5dd;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #3b4a5a;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .week-time-input:hover {
+            border-color: #4a89dc;
+        }
+
+        .value-box {
+            padding: 10px 12px;
+            background: #f0f4f8;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.8;
+            word-break: break-all;
+        }
+
+        .btn-line {
+            margin-top: 12px;
+        }
+
+        .demo-btn {
+            padding: 5px 14px;
+            border: 1px solid #4a89dc;
+            border-radius: 3px;
+            background: #4a89dc;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .demo-btn + .demo-btn {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>week-time-picker</h1>
+<div class="sub">星期 × 24 小时点选时间选择器（jQuery 插件）—— 点击输入框点选时段，鼠标悬停查看分行提示</div>
+
+<div class="card">
+    <h2>1. 基本用法（带隐藏域，随表单提交）</h2>
+    <div class="form-item">
+        <label>投放时间：</label>
+        <!-- 隐藏 input：name 用于表单提交，保存机内值 -->
+        <input type="hidden" name="deployTime" id="demoHidden" value="1=07:00-09:00,18:00-23:00;2=07:00-23:00">
+        <!-- 可见 input：readonly、不带 name，只负责展示与唤起面板 -->
+        <input type="text" class="week-time-input" readonly placeholder="请点选投放时间">
+    </div>
+    <div class="value-box" id="demoValue">当前机内值：</div>
+    <div class="btn-line">
+        <button type="button" class="demo-btn" onclick="alert('机内值：\n' + ($('#demoHidden').val() || '（空）'))">读取机内值</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>2. 历史数据回显（weekTimeToDisplay 转换）</h2>
+    <div class="form-item">
+        <label>回显示例：</label>
+        <input type="hidden" name="echoTime" id="echoHidden" value="">
+        <input type="text" class="week-time-input" readonly id="echoInput" placeholder="请点选投放时间">
+    </div>
+    <div class="value-box" id="echoValue">当前机内值：</div>
+    <div class="btn-line">
+        <button type="button" class="demo-btn" id="loadEchoBtn">模拟异步加载一条历史数据</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>3. 动态添加行（动态渲染后重新绑定即可）</h2>
+    <div id="dynamicRows"></div>
+    <div class="btn-line">
+        <button type="button" class="demo-btn" id="addRowBtn">再添加一行</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="week-time-picker.js"></script>
+<script>
+    // 示例 1：页面加载完成后绑定（内部自带防重复绑定）
+    $(function () {
+        // 可见 input 初始展示由隐藏域机内值转换而来
+        $('.card').eq(0).find('.week-time-input').val(
+            window.weekTimeToDisplay($('#demoHidden').val())
+        );
+        bindWeekTimePickerInputs(document);
+        refreshDemoValue();
+
+        // 选中确定后同步展示机内值
+        $('.card').eq(0).find('.week-time-input').on('click', function () {
+            setTimeout(refreshDemoValue, 0);
+        });
+        $(document).on('change', '#demoHidden', refreshDemoValue);
+        // 插件通过 js 写值不触发 change，这里简单轮询兜底演示
+        setInterval(refreshDemoValue, 500);
+    });
+
+    function refreshDemoValue() {
+        $('#demoValue').text('当前机内值：' + ($('#demoHidden').val() || '（空）'));
+    }
+
+    // 示例 2：模拟从服务端取到历史机内值后回显
+    $(function () {
+        $('#loadEchoBtn').on('click', function () {
+            var serverValue = '5=00:00-24:00;6=09:00-12:00,14:00-18:00;7=20:00-23:30';
+            $('#echoHidden').val(serverValue);
+            $('#echoInput').val(window.weekTimeToDisplay(serverValue));
+            $('#echoValue').text('当前机内值：' + serverValue);
+            $.noop();
+        });
+    });
+
+    // 示例 3：动态行
+    $(function () {
+        var rowIndex = 0;
+
+        function addRow() {
+            rowIndex++;
+            var $row = $(
+                '<div class="form-item">' +
+                '<label>第 ' + rowIndex + ' 行：</label>' +
+                '<input type="hidden" name="rowTime_' + rowIndex + '" value="">' +
+                '<input type="text" class="week-time-input" readonly placeholder="请点选投放时间">' +
+                '</div>'
+            );
+            $('#dynamicRows').append($row);
+            // 新增行只需对新容器再调一次绑定，已绑定的行不会重复绑定
+            bindWeekTimePickerInputs($row);
+        }
+
+        addRow();
+        $('#addRowBtn').on('click', addRow);
+    });
+</script>
+
+</body>
+</html>
